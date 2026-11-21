@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import { connectDB } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import equipmentRoutes from "./routes/equipmentRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cookieParser());
 
 // API Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/equipments", equipmentRoutes);
 
 // Root Health Check Route
 app.get("/", (req, res) => {

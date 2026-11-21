@@ -18,12 +18,22 @@ const port = process.env.PORT || 5000;
 // Middlewares
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL, "http://localhost:3000"].filter(Boolean),
+    origin: [
+      process.env.CLIENT_URL?.replace(/\/$/, ""),
+      "http://localhost:3000",
+    ].filter(Boolean),
     credentials: true,
   })
 );
 app.use(express.json());
 app.use(cookieParser());
+
+
+// Ensure MongoDB is connected on every serverless invocation
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 // API Routes
 app.use("/api/auth", authRoutes);

@@ -8,6 +8,7 @@ import equipmentRoutes from "./routes/equipmentRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import favoriteRoutes from "./routes/favoriteRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.use("/api/equipments", equipmentRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/favorites", favoriteRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // Root Health Check Route
 app.get("/", (req, res) => {

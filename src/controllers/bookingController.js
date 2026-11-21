@@ -63,7 +63,7 @@ export const createBookingAndCheckout = async (req, res) => {
     // Create Stripe Checkout Session
     const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      
       mode: "payment",
       customer_email: customer.email,
       line_items: [

@@ -4,7 +4,9 @@ import { verifyToken, verifyAdmin } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
+router.patch("/profile", verifyToken, updateMyProfile);
 router.put("/profile", verifyToken, updateMyProfile);
+router.patch("/profile", verifyToken, updateMyProfile);
 router.get("/", verifyToken, verifyAdmin, getAllUsers);
 router.patch("/:id/role", verifyToken, verifyAdmin, updateUserRole);
 router.delete("/:id", verifyToken, verifyAdmin, deleteUser);

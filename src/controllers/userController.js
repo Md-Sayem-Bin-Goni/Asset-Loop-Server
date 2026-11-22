@@ -5,21 +5,26 @@ import { getDB } from "../config/db.js";
 export const updateMyProfile = async (req, res) => {
   try {
     const db = getDB();
-    const { name, image, phone, address } = req.body;
+    const { name, phone, address, image } = req.body;
 
-    await db.collection("users").updateOne(
-      { email: req.user.email },
-      {
-        $set: {
-          ...(name && { name }),
-          ...(image !== undefined && { image }),
-          ...(phone !== undefined && { phone }),
-          ...(address !== undefined && { address }),
-        },
-      }
-    );
+    const updateFields = {};
+    if (name !== undefined) updateFields.name = name;
+    if (phone !== undefined) updateFields.phone = phone;
+    if (address !== undefined) updateFields.address = address;
+    if (image !== undefined) updateFields.image = image;
+
+    if (Object.keys(updateFields).length > 0) {
+      await db.collection("users").updateOne(
+        { email: req.user.email },
+        { $set: updateFields }
+      );
+    }
 
     const updatedUser = await db.collection("users").findOne({ email: req.user.email });
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
     res.status(200).json({ success: true, user: updatedUser });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to update profile" });

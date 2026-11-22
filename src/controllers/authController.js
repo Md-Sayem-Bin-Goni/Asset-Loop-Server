@@ -28,18 +28,15 @@ export const createJwtAndSyncUser = async (req, res) => {
       };
       const result = await usersCollection.insertOne(newUser);
       existingUser = { _id: result.insertedId, ...newUser };
-    } else if (name || image) {
-      // Update missing profile info if provided on login
-      await usersCollection.updateOne(
-        { email },
-        {
-          $set: {
-            ...(name && { name }),
-            ...(image && { image }),
-          },
-        }
-      );
-      existingUser = await usersCollection.findOne({ email });
+    } else {
+      // Update missing profile info if provided on login (only if not already set)
+      const updateFields = {};
+      if (!existingUser.name && name) updateFields.name = name;
+      if (!existingUser.image && image) updateFields.image = image;
+      if (Object.keys(updateFields).length > 0) {
+        await usersCollection.updateOne({ email }, { $set: updateFields });
+        existingUser = await usersCollection.findOne({ email });
+      }
     }
 
     const token = jwt.sign(
